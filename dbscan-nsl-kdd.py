@@ -7,8 +7,22 @@ clear = lambda:os.system('clear')
 #
 # DATASET KDDTrain+_20Percent.csv
 #
-path = "./datasets/KDDTrain+.csv"
+path = "./datasets/KDDTrain+_small.csv"
 dataSet = pd.read_csv(path, header = None,low_memory=False)
+
+#
+# Informacoes sobre o dataset
+#
+print('[i] Dimensao do dataset [linhas,amostras]: ',dataSet.shape)
+
+print('[i] Primeiras dez linhas:')
+print(dataSet.head(10))
+
+print('[i] Estatísticas sobre o dataset:')
+print(dataSet.describe())
+
+print('[i] Distribuicao das categorias:')
+print(dataSet[42].value_counts())
 
 #dataSetOption = 1 (nsl-kdd)
 #dataOption = 1 (oneHot)
@@ -27,6 +41,7 @@ attackType  = {'normal':"normal", 'neptune':"abnormal", 'warezclient':"abnormal"
 attackEncodingCluster  = {'normal':0,'abnormal':1}
 labels[:] = [attackType[item] for item in labels[:]] #Encoding the binary data
 labels[:] = [attackEncodingCluster[item] for item in labels[:]]#Changing the names of the labels to binary labels normal and abnormal
+
 
 #
 #Encoding the categorical features using one hot encoding and using Main attacks categories or binary categories
@@ -53,8 +68,8 @@ data =  MinMaxScaler(feature_range=(0, 1)).fit_transform(data)
 #DBSCAN
 #
 from sklearn.cluster import DBSCAN
-epsilon = 0.6
-minSamples = 250
+epsilon = 0.8
+minSamples = int(0.025 * len(data)) # 2,5% do tamanho do dataset
 print("\nClustering...\n")
 #Compute DBSCAN
 start_time = time.time() 
@@ -89,8 +104,52 @@ print("Max True Label","\n\n",maxDBvalue)
 #
 #F1 Score DBSCAN
 #
-#dbscanF1,clusterAssigned = dbF1(dblabels,labels,dbClusters,maxDBvalue)
-#print("\n\n#########################################################################")
-#print("Cluster Matchings by Maximun Intersection[Found: True] -> ",clusterAssigned)
-#print("DBSCAN F1 Score -> ",dbscanF1)
-#print("#########################################################################")
+
+from sklearn.metrics import f1_score
+# This part of the code automatically assign the max-ocurring instance in each found cluster to that specific found cluster,in order to evaluate the clustering with greater ease.
+n = 0 # counter
+c = -1 # - counter max Value has negative index
+clusterAssigned  = {} # creating an empty dictionary 
+f1 = 0
+average = ''
+
+while n < len(dbClusters):# while counter < number of clusters
+    clusterAssigned[dbClusters[n]] = maxDBvalue[c] #creating key(cluster index) with value (max number of the clustering results) for every iteration
+    n+=1
+    c+=1
+
+f1_Z = [clusterAssigned[item] for item in dblabels[:]] 
+f1_Y = np.array(labels,dtype = int) #Making sure that labels are in a int array
+
+#score metric
+dbscanF1 = f1_score(f1_Y,f1_Z, average = "macro")
+print("Cluster Matchings by Maximun Intersection[Found: True] -> ",clusterAssigned)
+print("DBSCAN F1 Score -> ",dbscanF1)
+
+
+###############
+# Plot
+##############
+from matplotlib import pyplot as plt
+core_samples_mask = np.zeros_like(dblabels, dtype=bool)
+core_samples_mask[db.core_sample_indices_] = True
+
+
+# Black removed and is used for noise instead.
+unique_labels = set(dblabels)
+colors = [plt.cm.Spectral(each) for each in np.linspace(0, 1, len(unique_labels))]
+for k, col in zip(unique_labels, colors):
+    if k == -1:
+        # Black used for noise.
+        col = [0, 0, 0, 1]
+
+    class_member_mask = (dblabels == k)
+
+    xy = data[class_member_mask & core_samples_mask]
+    plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col), markeredgecolor='k', markersize=14)
+
+    xy = data[class_member_mask & ~core_samples_mask]
+    plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col), markeredgecolor='k', markersize=6)
+
+plt.title('Estimated number of clusters: %d' % n_clusters)
+plt.show()
