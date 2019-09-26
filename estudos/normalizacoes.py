@@ -3,10 +3,7 @@
 Gerar matrizes com valores em escalas diferentes para estudar como a normalizacao vai ficar.
 Cada coluna da matriz eh uma feature, cada linha uma amostra.
 
-Serao geradas 5 colunas com 25 linhas
-Duas das cinco colunas terao escalas bem destoante das demais
-
-Referencias:
+Referencias do NumPy:
 https://docs.scipy.org/doc/numpy-1.15.0/genindex.html
 
 '''
@@ -14,7 +11,7 @@ import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 
 
-size = 5
+size = 10000
 
 # Feature 00 - Zero, um, dois, tres, quatro ou cinco
 feature00 = np.random.choice([0.0,1.0,2.0,3.0,4.0,5.0],size)
@@ -55,29 +52,19 @@ matrix_max_data = MinMaxScaler().fit(matrix).data_max_
 matrix_scaled = MinMaxScaler().fit_transform(matrix)
 
 #
-# Exibicao dos resultadsos
+# Exibicao dos resultadsos (so mostra se esse script for executado individualmente)
 #
 # https://docs.scipy.org/doc/numpy-1.15.0/reference/generated/numpy.set_printoptions.html#numpy.set_printoptions
 #
 
 np.set_printoptions(suppress=True, precision=1, linewidth=160)
-print("########### MATRIX GERADA #############")
-print(matrix.view())
+print("########### MATRIX GERADA (10 primeiras linhas) #############")
+print(matrix[:10,:]) # Mostra as dez primeiras linhas (:10) e todas as colunas (:)
 print("")
 
 np.set_printoptions(suppress=True, precision=5, linewidth=160)
-print("########### MATRIX NORMALIZADA #############")
+print("########### MATRIX NORMALIZADA  - (10 primeiras linhas) #############")
 print("\n - MinMaxScaler:")
 print("Max data: ", matrix_max_data)
-print("\n",matrix_scaled)
-
-
-'''
-https://scikit-learn.org/stable/modules/preprocessing.html#preprocessing-scaler
-For instance, many elements used in the objective function of a learning algorithm (such as the RBF kernel of Support Vector Machines or the l1 and l2 regularizers of linear models) assume that all features are centered around zero and have variance in the same order. If a feature has a variance that is orders of magnitude larger than others, it might dominate the objective function and make the estimator unable to learn from other features correctly as expected.
-
-5.3.1.3. Scaling data with outliers
-If your data contains many outliers, scaling using the mean and variance of the data is likely to not work very well. In these cases, you can use robust_scale and RobustScaler as drop-in replacements instead. They use more robust estimates for the center and range of your data.
-'''
-
+print("\n",matrix_scaled[:10,:]) # Mostra dez primeiras linhas (:10) e todas as colunas (:)
 
