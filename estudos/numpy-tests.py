@@ -7,7 +7,6 @@ import numpy as np
 np.random.seed(0)
 x1 = np.random.randint(10,size=10)
 
-
 #Array Slicing: Accessing Subarrays
 # x[start:stop:step]
 # If any of these are unspecified, they default to the values start=0, stop=size of dimension, step=1
