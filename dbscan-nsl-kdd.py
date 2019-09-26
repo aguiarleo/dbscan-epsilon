@@ -24,10 +24,6 @@ print(dataSet.describe())
 print('[i] Distribuicao das categorias:')
 print(dataSet[42].value_counts())
 
-#dataSetOption = 1 (nsl-kdd)
-#dataOption = 1 (oneHot)
-#encodeOption = 1 (Binary true labels)
-
 #Getting the Data we want to use for the algorithms
 data = dataSet.iloc[:,:-2].values # Data, Get all the rows and all the columns except all the colums - 2
 labels = dataSet.iloc[:,42].values# Labels
@@ -62,14 +58,17 @@ data = transform.fit_transform(data)
 #
 from sklearn.preprocessing import MinMaxScaler
 #Transforms features by scaling each feature to a given range.
-data =  MinMaxScaler(feature_range=(0, 1)).fit_transform(data)
+data = MinMaxScaler(feature_range=(0, 1)).fit_transform(data)
+
+
+print("[i] Cinco primeiras linhas do dataset normalizado: n\",data[:5,:])
 
 #
 #DBSCAN
 #
 from sklearn.cluster import DBSCAN
-epsilon = 0.8
-minSamples = int(0.025 * len(data)) # 2,5% do tamanho do dataset
+epsilon = 0.25
+minSamples = 4
 print("\nClustering...\n")
 #Compute DBSCAN
 start_time = time.time() 
@@ -126,30 +125,3 @@ dbscanF1 = f1_score(f1_Y,f1_Z, average = "macro")
 print("Cluster Matchings by Maximun Intersection[Found: True] -> ",clusterAssigned)
 print("DBSCAN F1 Score -> ",dbscanF1)
 
-
-###############
-# Plot
-##############
-from matplotlib import pyplot as plt
-core_samples_mask = np.zeros_like(dblabels, dtype=bool)
-core_samples_mask[db.core_sample_indices_] = True
-
-
-# Black removed and is used for noise instead.
-unique_labels = set(dblabels)
-colors = [plt.cm.Spectral(each) for each in np.linspace(0, 1, len(unique_labels))]
-for k, col in zip(unique_labels, colors):
-    if k == -1:
-        # Black used for noise.
-        col = [0, 0, 0, 1]
-
-    class_member_mask = (dblabels == k)
-
-    xy = data[class_member_mask & core_samples_mask]
-    plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col), markeredgecolor='k', markersize=14)
-
-    xy = data[class_member_mask & ~core_samples_mask]
-    plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col), markeredgecolor='k', markersize=6)
-
-plt.title('Estimated number of clusters: %d' % n_clusters)
-plt.show()

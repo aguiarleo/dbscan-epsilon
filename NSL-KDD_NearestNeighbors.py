@@ -1,3 +1,9 @@
+'''
+TODO:
+- Ir aumentando a quantidade de colunas no dataset aos poucos e ver as diferencas. Buscar pegar so as informacoes que o Vinicius escolheu.
+- Tentar achar o parametro de escolha do minsamples
+'''
+
 import numpy as np
 import pandas as pd 
 import time
@@ -68,7 +74,7 @@ data =  MinMaxScaler(feature_range=(0, 1)).fit_transform(data)
 # NEAREST NEIGHBORS
 ################
 from sklearn.neighbors import NearestNeighbors
-neigh = NearestNeighbors(n_neighbors=2)
+neigh = NearestNeighbors(n_neighbors=4)
 nbrs = neigh.fit(data)
 distances, indices = nbrs.kneighbors(data)
 
