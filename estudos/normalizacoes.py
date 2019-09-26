@@ -11,7 +11,8 @@ https://docs.scipy.org/doc/numpy-1.15.0/genindex.html
 
 '''
 import numpy as np
-from sklearn import preprocessing
+from sklearn.preprocessing import MinMaxScaler
+
 
 size = 5
 
@@ -42,23 +43,34 @@ feature07 = np.random.choice([0.0,1.0],size)
 # agrupamento das matrizes individuais
 matrix = np.stack((feature00, feature01, feature02, feature03, feature04, feature05, feature06, feature07), axis=-1)
 
+#
 # NORMALIZACAO
-# https://scikit-learn.org/stable/modules/preprocessing.html#normalization
-matrix_normalized = preprocessing.normalize(matrix, norm='l2')
+#
+# TODO: estudar o compativo
+# https://scikit-learn.org/stable/auto_examples/preprocessing/plot_all_scaling.html#sphx-glr-auto-examples-preprocessing-plot-all-scaling-py
+#
+
+# MinMaxScaler
+matrix_max_data = MinMaxScaler().fit(matrix).data_max_
+matrix_scaled = MinMaxScaler().fit_transform(matrix)
 
 #
 # Exibicao dos resultadsos
 #
-
 # https://docs.scipy.org/doc/numpy-1.15.0/reference/generated/numpy.set_printoptions.html#numpy.set_printoptions
-np.set_printoptions(suppress=True, precision=1, linewidth=160)
+#
 
+np.set_printoptions(suppress=True, precision=1, linewidth=160)
 print("########### MATRIX GERADA #############")
 print(matrix.view())
 print("")
+
 np.set_printoptions(suppress=True, precision=5, linewidth=160)
 print("########### MATRIX NORMALIZADA #############")
-print(matrix_normalized.view())
+print("\n - MinMaxScaler:")
+print("Max data: ", matrix_max_data)
+print("\n",matrix_scaled)
+
 
 '''
 https://scikit-learn.org/stable/modules/preprocessing.html#preprocessing-scaler
