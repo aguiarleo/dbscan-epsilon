@@ -61,7 +61,7 @@ from sklearn.preprocessing import MinMaxScaler
 data = MinMaxScaler(feature_range=(0, 1)).fit_transform(data)
 
 
-print("[i] Cinco primeiras linhas do dataset normalizado: n\",data[:5,:])
+print("[i] Cinco primeiras linhas do dataset normalizado: \n",data[:5,:])
 
 #
 #DBSCAN
@@ -78,11 +78,11 @@ print("Data Successfully Clustered")
 
 core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
 core_samples_mask[db.core_sample_indices_] = True
-
 dblabels = db.labels_
+
 # Number of clusters in labels, ignoring noise if present.
 n_clusters = len(set(dblabels))
-nNoises = list(dblabels).count(-1)
+n_noise_ = list(dblabels).count(-1)
 
 n = -1  # DBSCAN return index -1 cluster
 dbClusters = []
@@ -97,7 +97,7 @@ print("#########################################################################
 print("DBSCAN RESULTS\n\n")
 print("Clusters -> ",dbClusters,"\n")
 print(dbscanR,"\n\n")
-print("Noise -> ",nNoises)
+print("Noise -> ",n_noise_)
 print("Max True Label","\n\n",maxDBvalue)
 
 #
