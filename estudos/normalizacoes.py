@@ -52,7 +52,7 @@ matrix_max_data = MinMaxScaler().fit(matrix).data_max_
 matrix_scaled = MinMaxScaler().fit_transform(matrix)
 
 #
-# Exibicao dos resultadsos (so mostra se esse script for executado individualmente)
+# Exibicao dos resultadsos
 #
 # https://docs.scipy.org/doc/numpy-1.15.0/reference/generated/numpy.set_printoptions.html#numpy.set_printoptions
 #

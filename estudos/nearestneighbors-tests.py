@@ -6,7 +6,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 
-nbrs = NearestNeighbors(n_neighbors=4, algorithm='ball_tree', metric='euclidean').fit(matrix_scaled)
+nbrs = NearestNeighbors(n_neighbors=2, algorithm='ball_tree', metric='euclidean').fit(matrix_scaled)
 distances, indices = nbrs.kneighbors(matrix_scaled)
 print('########### NearestNeighbors ###########')
 print('\nIndices (10 primeiros):')
