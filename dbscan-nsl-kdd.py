@@ -71,11 +71,12 @@ data = MinMaxScaler().fit_transform(data)
 #DBSCAN
 #
 from sklearn.cluster import DBSCAN
-epsilon = 0.09623488371951508 # Outlier IQR
+epsilon = 0.03
+#epsilon = 0.09623488371951508  # Outlier IQR
 print("\nClustering...\n")
 #Compute DBSCAN
 start_time = time.time() 
-db = DBSCAN(eps=epsilon, min_samples=5, algorithm='ball_tree', metric='euclidean', n_jobs=2).fit(data)
+db = DBSCAN(eps=epsilon, min_samples=8, algorithm='ball_tree', metric='euclidean', n_jobs=2).fit(data)
 print("\n\nRun Time ->","--- %s seconds ---" % (time.time() - start_time))
 print("Data Successfully Clustered")
 
@@ -89,4 +90,35 @@ n_noise_ = list(dblabels).count(-1)
 
 print('Estimated number of clusters: %d' % n_clusters_)
 print('Estimated number of noise points: %d' % n_noise_)
+
+#
+# Metrics
+#  Cria um array com zeros para por o numero um onde forem os ruidos encontrados pelo dbscan
+#
+metrics_predicted_data = np.zeros(dblabels.shape) # array com zeros e 1 onde for ruido do dbscan
+for point_noise in np.where(dblabels == -1)[0]:
+		metrics_predicted_data[point_noise] = 1
+
+
+from sklearn.metrics import classification_report
+target_names = ['normal', 'anormal']
+metrics = classification_report(list(labels), list(metrics_predicted_data), target_names = target_names, output_dict = True)
+
+for item in target_names:
+	print("=> Metricas do {} (total de {} registros nos dados corretos):".format(item,metrics[item]['support']))
+	print("  TPR (recall): {}".format(metrics[item]['recall']))
+	print("  Precisao (precision): {}".format(metrics[item]['precision']))
+	print("  F1-Score: {}".format(metrics[item]['f1-score']))
+	print("")
+	
+
+	
+print("=> Metricas gerais:")
+print("  TPR (recall): {}".format(metrics['weighted avg']['recall']))
+print("  Precisao (precision): {}".format(metrics['weighted avg']['precision']))
+fpr = 1 - metrics['weighted avg']['recall']
+print("  FPR: {}".format(fpr))
+#print("  F1-Score: {}".format(metrics['weighted avg']['f1-score']))
+fscore = 2 * ((metrics['weighted avg']['precision'] * metrics['weighted avg']['recall']) / (metrics['weighted avg']['precision'] + metrics['weighted avg']['recall']))
+print("  F-Score: {}".format(fscore))
 
