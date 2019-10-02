@@ -27,21 +27,16 @@ Refs:
 
 
 from sklearn.metrics import classification_report
-#y_true = [0, 1, 1, 1, 0, 0, 1, 1, 0, 1]
-#y_pred = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 dados_corretos = ['x','x','y','x','y','x','y','y','x','x']
-dados_preditos = ['x','x','x','x','y','x','x','x','x','x']
+dados_preditos = ['x','x','y','x','y','x','y','x','x','y']
 
 
-#target_names = ['normal', 'ataque']
 target_names = ['xis', 'ypsilon']
 metrics = classification_report(dados_corretos, dados_preditos, target_names = target_names, output_dict = True)
-
 
 for item in target_names:
 	print("=> Metricas do {} (total de {} registros nos dados corretos):".format(item,metrics[item]['support']))
 	print("  TPR (recall): {}".format(metrics[item]['recall']))
-	#print("  FPR: {}".format(1 - metrics[target_names[1]]['recall']))
 	print("  Precisao (precision): {}".format(metrics[item]['precision']))
 	print("  F1-Score: {}".format(metrics[item]['f1-score']))
 	print("")
@@ -50,6 +45,12 @@ for item in target_names:
 	
 print("=> Metricas gerais:")
 print("  TPR (recall): {}".format(metrics['weighted avg']['recall']))
-print("  FPR: {}".format(1 - metrics['weighted avg']['recall']))
+
 print("  Precisao (precision): {}".format(metrics['weighted avg']['precision']))
+
 print("  F1-Score: {}".format(metrics['weighted avg']['f1-score']))
+#fscore = 2 * ((metrics['weighted avg']['precision'] * metrics['weighted avg']['recall']) / (metrics['weighted avg']['precision'] + metrics['weighted avg']['recall']))
+#print("  F-Score: {}".format(fscore))
+
+fpr = 1 - metrics['weighted avg']['recall']
+print("  FPR: {}".format(fpr))
