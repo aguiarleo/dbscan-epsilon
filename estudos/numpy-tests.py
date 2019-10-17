@@ -86,3 +86,10 @@ Concatenation
 x = np.array([1, 2, 3])
 y = np.array([3, 2, 1])
 np.concatenate([x, y])
+
+
+# Array indexing: 
+# Ref: https://docs.scipy.org/doc/numpy-1.15.0/user/basics.indexing.html
+
+x = np.arange(10)
+# Boolean or “mask” index arrays¶

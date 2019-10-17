@@ -41,20 +41,6 @@ labels[:] = [attackType[item] for item in labels[:]] #Encoding the binary data
 labels[:] = [attackEncodingCluster[item] for item in labels[:]]#Changing the names of the labels to binary labels normal and abnormal
 
 
-#
-#Encoding the categorical features using one hot encoding and using Main attacks categories or binary categories
-#
-#from sklearn.preprocessing import OneHotEncoder
-#from sklearn.compose import ColumnTransformer
-#We use One hot encoding to pervent the machine learning to atribute the categorical data in order. 
-#What one hot encoding(ColumnTransformer) does is, it takes a column which has categorical data, 
-#which has been label encoded, and then splits the column into multiple columns.
-#The numbers are replaced by 1s and 0s, depending on which column has what value
-#We don't need to do a label encoded step because ColumnTransformer do one hot encode and label encode!
-#Encoding the Independient Variable
-#transform = ColumnTransformer([("Servers", OneHotEncoder(categories = "auto"), [1,2,3])], remainder="passthrough")
-#data = transform.fit_transform(data)
-
 # Remove as colunas protocol_type, service e flag
 # Ref: https://thispointer.com/delete-elements-rows-or-columns-from-a-numpy-array-by-index-positions-using-numpy-delete-in-python/
 data = np.delete(data,[1,2,3], axis=1)
@@ -71,12 +57,12 @@ data = MinMaxScaler().fit_transform(data)
 #DBSCAN
 #
 from sklearn.cluster import DBSCAN
-epsilon = 0.03
+epsilon = 0.8
 #epsilon = 0.09623488371951508  # Outlier IQR
 print("\nClustering...\n")
 #Compute DBSCAN
 start_time = time.time() 
-db = DBSCAN(eps=epsilon, min_samples=8, algorithm='ball_tree', metric='euclidean', n_jobs=2).fit(data)
+db = DBSCAN(eps=epsilon, min_samples=650, algorithm='ball_tree', metric='euclidean', n_jobs=2).fit(data)
 print("\n\nRun Time ->","--- %s seconds ---" % (time.time() - start_time))
 print("Data Successfully Clustered")
 

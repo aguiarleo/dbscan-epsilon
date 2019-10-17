@@ -22,7 +22,7 @@ data,labels = nsl_kdd.load_file(path, show_brief = True)
 # Encoding labels
 labels = nsl_kdd.binary_encoding_labels(labels)
 
-# normalization
+# scaling
 data = pre_processing.scaling(data)
 
 # DBSCAN
