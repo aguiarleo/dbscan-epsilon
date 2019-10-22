@@ -2,20 +2,21 @@
 
 import nsl_kdd, pre_processing, dbscan, metrics
 import numpy as np
-from pca import pca_2_components
+from pca import pca_decompose
 
 #
 # Parameters: 1) dataset file path, 2) DBSCAN min samples 3) DBSCAN epsilon
 #
 import sys
-if (len(sys.argv) != 4):
-	print("Parameters: 1) dataset file path, 2) DBSCAN min samples 3) DBSCAN epsilon\n:")
-	print("python main.py path/to/dataset.csv 650 0.15")
+if (len(sys.argv) != 5):
+	print("Parameters: 1) dataset file path, 2) DBSCAN min samples, 3) DBSCAN epsilon, PCA Components\n:")
+	print("python main.py path/to/dataset.csv 650 0.15 2")
 	exit();
 else:
 	path = sys.argv[1]
 	min_samples = int(sys.argv[2])
 	epsilon = float(sys.argv[3])
+	pca_n_components = int(sys.argv[4])
 
 # Load dataset
 data,labels = nsl_kdd.load_file(path, show_brief = True)
@@ -27,7 +28,7 @@ labels = nsl_kdd.binary_encoding_labels(labels)
 data = pre_processing.scaling(data)
 
 #PCA
-data = pca_2_components(data)
+data = pca_decompose(data,pca_n_components)
 
 # DBSCAN
 #dbscan_labels,dbscan_clusters,number_noises,dbscanR,dbscan_max_value = dbscan.clustering(data,labels,min_samples,epsilon) 
