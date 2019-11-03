@@ -4,13 +4,11 @@ import nsl_kdd, pre_processing, dbscan
 import numpy as np
 from pca import pca_decompose
 
-#
-# Parameters: 1) dataset file path, 2) DBSCAN min samples 3) DBSCAN epsilon
-#
+# Argumentos do script
 import sys
 if (len(sys.argv) != 5):
-	print("Parameters: 1) dataset file path, 2) DBSCAN min samples, 3) DBSCAN epsilon, PCA Components\n:")
-	print("python main.py path/to/dataset.csv 650 0.15 2")
+	print("Parametros: 1) Caminho do arquivo dataset, 2) DBSCAN - minPts, 3) DBSCAN - Eps, 4) PCA - num componentes\n:")
+	print("python main.py caminho/para/dataset.csv 76 0.1 2")
 	exit();
 else:
 	path = sys.argv[1]
@@ -23,6 +21,9 @@ data,dataset_labels = nsl_kdd.load_file(path, show_brief = True)
 
 # Encoding labels
 dataset_labels = nsl_kdd.binary_encoding_labels(dataset_labels)
+
+# Load dataset and labels encoded - desativado - pouca diferenca
+#data,dataset_labels = nsl_kdd.load_dataset_binary_and_risk_encoded(path, show_brief = True)
 
 # scaling
 data = pre_processing.scaling(data)

@@ -9,7 +9,7 @@ def nearest_neighbors(data,num_neighbors):
 
 	print("[i] NearestNeighbors: num_neighbors = {} ...\n".format(num_neighbors))
 	
-	neigh = NearestNeighbors(n_neighbors=num_neighbors, algorithm='ball_tree',metric='euclidean', n_jobs=2)
+	neigh = NearestNeighbors(n_neighbors=num_neighbors, algorithm='ball_tree',metric='euclidean', n_jobs=-1)
 	nbrs = neigh.fit(data)
 	distances, indices = nbrs.kneighbors(data)
 

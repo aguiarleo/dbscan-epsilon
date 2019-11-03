@@ -1,4 +1,3 @@
-
 # Scale data between 0 and 1
 def scaling(X):
 	from sklearn.preprocessing import MinMaxScaler

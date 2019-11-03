@@ -1,19 +1,17 @@
 from matplotlib import pyplot as plt
 import sys, nsl_kdd,  pre_processing, knn
 import numpy as np
-from pca import pca_2_components
+from pca import pca_decompose
 
-#
-# Parameters: 1) dataset file path, 2) DBSCAN min samples 3) DBSCAN epsilon
-#
-
-if (len(sys.argv) != 3):
-	print("Parameters: 1) dataset file path, 2) Number of neighbors\n:")
-	print("python main-knn.py path/to/dataset.csv 650")
+# Argumentos do script
+if (len(sys.argv) != 4):
+	print("Parametros: 1) Caminho do arquivo dataset, 2) Numero de vizinhos, 3) PCA - num componentes\n:")
+	print("python main-knn.py caminho/para/dataset.csv 76 2")
 	exit();
 else:
 	path = sys.argv[1]
 	n_neighbors = int(sys.argv[2])
+	pca_n_components = int(sys.argv[3])
 
 
 # Load dataset
@@ -23,9 +21,7 @@ data,labels = nsl_kdd.load_file(path)
 data = pre_processing.scaling(data)
 
 #PCA
-data = pca_2_components(data)
-
-print("First 10 lines {}".format(data[:11,:]))
+data = pca_decompose(data,pca_n_components)
 
 # NearestNeighbors
 print("########### NearestNeighbors ##########")
@@ -34,17 +30,18 @@ distances, indices = knn.nearest_neighbors(data,n_neighbors)
 
 distances = np.sort(distances, axis=0)
 distances = distances[:,1]
-print("* Distances: ")
+print("* Distancias: ")
 print("** Min: ",distances.min())
 print("** Max: ",distances.max())
-print("** Mean: ",distances.mean())
+print("** Media: ",distances.mean())
 
-iq1 = np.percentile(distances,25)
-iq3 = np.percentile(distances,75)
-iqr = iq3 - iq1
-distance_outlier = (iqr*1.5)+iq3
-print("* Distances Interquartiles")
-print("** IQ1: {}\n** IQ3: {},\n** IQR: {}\n** Outlier: {}".format(iq1,iq3,iqr,distance_outlier))
+# Interquartis - tentativa de encontrar o "ponto fora da curva" matematicamente, nao deu certo
+#iq1 = np.percentile(distances,25)
+#iq3 = np.percentile(distances,75)
+#iqr = iq3 - iq1
+#distance_outlier = (iqr*1.5)+iq3
+#print("* Distancias Interquartis")
+#print("** IQ1: {}\n** IQ3: {},\n** IQR: {}\n** Outlier: {}".format(iq1,iq3,iqr,distance_outlier))
 
 # Graph
 plt.plot(distances)

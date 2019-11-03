@@ -37,6 +37,6 @@ for color, i, target_name in zip(colors, [0, 1], ['normal','attack']):
 
 plt.title("PCA of NSL-KDD")
 plt.legend(loc="best", shadow=False, scatterpoints=1)
-plt.axis([-4, 4, -1.5, 1.5])
+plt.axis([-2, 3, -1.5, 3])
 
 plt.show()

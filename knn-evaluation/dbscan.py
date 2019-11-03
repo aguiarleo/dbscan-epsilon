@@ -54,7 +54,7 @@ def evaluate(dataset_labels, dbscan_labels, dbscan_clusters):
 	
 	#Automatically assigning the max-ocurring instance in each found cluster to that specific found cluster, in order to evaluate clustering with greater ease.
 	n = 0 # counter
-	c = -1 # - counter for when max Value has negative index
+	c = (-1 if -1 in dbscan_labels else 0) # - counter for when max Value has negative index
 	dictionaryCluster  = {} #Creating an empty dictionary 
 	
 	while n < len(dbscan_clusters):#while counter < number of clusters
@@ -77,7 +77,6 @@ def evaluate(dataset_labels, dbscan_labels, dbscan_clusters):
 	
 	dataset_labels = np.array(dataset_labels, dtype = int) #Making sure that labels are in an int array
 
-	
 	target_names = ['normal', 'attack']
 	
 	tpr, precision, fpr, fscore = metrics.report(dataset_labels, dbscan_labels_grade, target_names)
